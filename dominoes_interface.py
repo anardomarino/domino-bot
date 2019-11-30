@@ -1,4 +1,5 @@
 from dominobot import *
+from copy import deepcopy
 
 HAND_COUNT = 7
 NUM_PLAYERS = 4
@@ -18,6 +19,11 @@ board = ""
 def welcome():
     with open("welcome.txt",'r') as file:
         print(file.read())
+
+def get_board_ends(board):
+    if board == "":
+        return (-1,-1)
+    return (int(board[1]), int(board[-2]))
 
 def reset_dominoes():
     global board, available
@@ -46,11 +52,11 @@ def select_hand():
 
 def add_to_board(new_pieces: list) -> None:
     global board
-    to_add = new_pieces.copy()
+    to_add = deepcopy(new_pieces)
     if board == "":
         first = to_add.pop(0)
         board = "(" + str(first[0]) + "," + str(first[1]) + ")"
-    pot_spots = (int(board[1]), (int(board[-2])))
+    pot_spots = get_board_ends(board)
     for piece in to_add:
         if piece[0] in pot_spots:
             if piece[0] == pot_spots[0]:
@@ -71,16 +77,16 @@ def move():
     print("Enter player moves as dominoes: ")
     print("Format as (x,y) where x <= y.")
     new_pieces = []
-    if board != "":
-        pot_spots = (int(board[1]), (int(board[-2])))
-    else:
-        pot_spots = (-1,-1)
+    pot_spots = get_board_ends(board)
     for i in range(NUM_PLAYERS-1):
         while True:
             try:
                 domino = tuple([int(x) for x in input("PLAYER {}: ".format(i+1)).split(',')])
                 if domino not in available:
                     print("UNAVAILABLE DOMINO.")
+                    print('available:')
+                    print(available)
+                    print("------------------")
                     continue
                 elif pot_spots != (-1,-1) and (domino[0] not in pot_spots and domino[1] not in pot_spots):
                     print("INVALID PLACEMENT.")
@@ -110,6 +116,16 @@ def main():
     bot = dominobot()
     welcome()
     bot.set_hand(select_hand())
+    if (6,6) in bot.get_hand():
+        # TODO replace manual move with automatic 6 placement
+        play = bot.manual_move(board, hasDoubleSix=True)
+        add_to_board(play)
+    else:
+        print("Order goes:")
+        print("\t2")
+        print("1\t\t3")
+        print("\tYou")
+
     while True:
         new_pieces, new_board = move()
         print("Pieces played:")
@@ -118,6 +134,7 @@ def main():
         print("\tPlayer 3: " + str(new_pieces[2]))
         print("Board:")
         print("\t" + board)
+        bot.manual_move(new_board)
 
 if __name__ == '__main__':
     main()
