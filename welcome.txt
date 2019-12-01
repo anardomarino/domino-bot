@@ -1,5 +1,5 @@
 Welcome to domino-bot.
 Please setup game by inputting hand.
 Domino pieces are generated in format: x,y
-Where x and y are the numbers on the domino.
+Where x and y are the numbers on the domino and x <= y.
 Please input the starting hand by domino:
