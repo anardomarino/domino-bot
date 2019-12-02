@@ -69,8 +69,9 @@ def move():
     pot_spots = get_board_ends(board)
     for i in range(NUM_PLAYERS-1):
         while True:
+            inp = input("PLAYER {}: ".format(i+1))
             try:
-                domino = tuple([int(x) for x in input("PLAYER {}: ".format(i+1)).split(',')])
+                domino = tuple([int(x) for x in inp.split(',')])
                 if domino not in available:
                     print("UNAVAILABLE DOMINO.")
                     print('available:')
@@ -95,6 +96,8 @@ def move():
                 available.remove(domino)
                 new_pieces.append(domino)
             except:
+                if inp == "quit":
+                    return None
                 print("INVALID INPUT.")
                 continue
             break
@@ -116,7 +119,10 @@ def main():
         print("\tYou")
 
     while True:
-        new_pieces, new_board = move()
+        mv = move()
+        if (mv == None):
+            break
+        new_pieces, new_board = mv
         print("Pieces played:")
         print("\tPlayer 1: " + str(new_pieces[0]))
         print("\tPlayer 2: " + str(new_pieces[1]))
