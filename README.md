@@ -27,3 +27,12 @@ $ sudo apt install python-numpy
 $ pip3 install torch==1.3.1+cpu torchvision==0.4.2+cpu -f https://download.pytorch.org/whl/torch_stable.html
 $ pip3 install pyro-ppl
 ```
+
+For MacOs
+
+```
+$ python3 -m pip install --user numpy scipy matplotlib ipython jupyter pandas sympy nose
+$ sudo pip3 install --upgrade pip
+$ pip3 install torch torchvision
+$ pip3 install pyro-ppl
+```
